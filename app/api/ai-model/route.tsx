@@ -4,7 +4,7 @@ import { GoogleGenerativeAI, Part } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY as string);
 
-export const maxDuration = 300;
+export const maxDuration = 50;
 
 // Function to convert an image URL to a Base64 string (Server-Side Fix)
 async function fetchImageAsBase64(imageUrl: string): Promise<string> {
