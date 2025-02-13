@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Calendar, CircleDollarSign, Home, Inbox, Paintbrush, Search, Settings } from "lucide-react"
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const items = [
     {
@@ -37,12 +37,12 @@ const items = [
 
 export function AppSidebar() {
     const path = usePathname();
-    console.log(path)
+    const router = useRouter();
     return (
         <Sidebar>
             <SidebarHeader>
                 <div className='py-4'>
-                    <div className='flex items-center'>
+                    <div className='flex items-center cursor-pointer' onClick={() => router.push("/")}>
                         <Image src={'/logo.svg'} alt='logo' width={100} height={100}
                             className='w-[40px] h-[40px]' />
                         <div className='flex flex-col items-start'>
