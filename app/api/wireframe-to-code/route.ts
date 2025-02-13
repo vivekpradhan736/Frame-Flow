@@ -72,3 +72,30 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(result);
 
 }
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const { uid, email } = await req.json();
+
+        if (!uid && !email) {
+            return NextResponse.json({ error: "UID or email is required for deletion" }, { status: 400 });
+        }
+
+        if (uid) {
+            // Delete a specific record by UID
+            const result = await db.delete(WireframeToCodeTable)
+                .where(eq(WireframeToCodeTable.uid, uid))
+                .returning({ uid: WireframeToCodeTable.uid });
+
+        if (result.length === 0) {
+            return NextResponse.json({ error: "No record found to delete" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Record(s) deleted successfully", deleted: result });
+    }
+
+    } catch (error) {
+        console.error("Error deleting record:", error);
+        return NextResponse.json({ error: "Failed to delete record" }, { status: 500 });
+    }
+}
