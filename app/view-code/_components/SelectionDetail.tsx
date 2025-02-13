@@ -23,8 +23,8 @@ function SelectionDetail({ record, regenrateCode, isReady }: any) {
           <Image
             src={record?.imageUrl}
             alt="Wireframe"
-            width={300}
-            height={400}
+            width={800}
+            height={800}
             className="rounded-lg object-contain w-full h-full group-hover:opacity-80 group-hover:blur-[2px] transition duration-300 ease-in-out"
           />
 
@@ -39,8 +39,8 @@ function SelectionDetail({ record, regenrateCode, isReady }: any) {
           <Image
             src={record?.imageUrl}
             alt="Wireframe"
-            width={300}
-            height={400}
+            width={800}
+            height={800}
             className="rounded-lg object-contain w-full h-full"
           />
         </div>
