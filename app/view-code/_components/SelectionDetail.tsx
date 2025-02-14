@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RECORD } from '../[uid]/page'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { Maximize, PanelLeftOpen, RefreshCcw } from 'lucide-react'
+import { ArrowRight, Maximize, PanelLeftOpen } from 'lucide-react'
 import {
     Dialog,
     DialogContent,
@@ -14,8 +14,9 @@ import {
 import { AppSidebar } from '@/app/_components/AppSidebar'
 import { SidebarProvider } from '@/components/ui/sidebar'
 
-function SelectionDetail({ record, regenrateCode, isReady }: any) {
-  const [isOpen, setIsOpen] = React.useState(false);
+function SelectionDetail({ record, regenrateCode, newGenerateCode, isReady }: any) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [newPrompt, setNewPrompt] = useState(record?.description);
     return record && (
         <div className='px-5 pt-2 pb-1 bg-gray-100 rounded-lg'>
             <h2 className='font-bold my-2'>Wireframe</h2>
@@ -51,11 +52,11 @@ function SelectionDetail({ record, regenrateCode, isReady }: any) {
             <h2 className='font-bold mt-4 mb-2'>AI Model</h2>
             <Input defaultValue={record?.model} disabled={true} className='bg-white' />
 
-            <h2 className='font-bold mt-3 mb-2'>Description</h2>
-            <Textarea defaultValue={record?.description} disabled={true}
-                className='bg-white h-[160px]' />
-
-            <Button className='mt-4 w-full' disabled={!isReady} onClick={() => regenrateCode()} > <RefreshCcw /> Regenerate Code</Button>
+            <h2 className='font-bold mt-3 mb-2'>Prompt</h2>
+            <Textarea defaultValue={record?.description} placeholder='Enter your prompt'
+                className='bg-white h-[160px]' onChange={(e) => setNewPrompt(e.target.value)} />
+            
+            <Button className='mt-4 w-full' disabled={newPrompt === ""} onClick={() => newGenerateCode(newPrompt)} > <ArrowRight /> Send</Button>
 
             <Drawer.Root  direction="left" open={isOpen} onOpenChange={setIsOpen}>
             <Drawer.Trigger className="relative flex h-8 flex-shrink-0 items-center justify-center">

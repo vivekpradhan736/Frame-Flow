@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     const { description, imageUrl, model, uid, email } = await req.json();
-    console.log(uid)
 
     const creditResult = await db.select().from(usersTable)
         .where(eq(usersTable.email, email));
@@ -57,13 +56,12 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: NextRequest) {
-    const { uid, codeResp } = await req.json();
-    console.log("uid",uid)
-    console.log("codeResp",codeResp)
+    const { uid, codeResp, prompt } = await req.json();
 
     const result = await db.update(WireframeToCodeTable)
         .set({
-            code: codeResp
+            code: codeResp,
+            description: prompt,
         }).where(eq(WireframeToCodeTable.uid, uid))
         .returning({ uid: WireframeToCodeTable.uid })
     

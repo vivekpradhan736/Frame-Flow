@@ -85,20 +85,53 @@ function ViewCode() {
         }
 
         setIsReady(true);
-        UpdateCodeToDb(text);
+        UpdateCodeToDb(text, record?.description);
     }
+
+    const newGenerateCode = async (prompt: string) => {
+        setLoading(true);
+        setCodeResp('');
+
+        const res = await fetch('/api/ai-model', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                description: prompt + ":" + Constants.PROMPT,
+                model: record?.model,
+                imageUrl: record?.imageUrl
+            })
+        });
+
+        if (!res.body) return;
+        setLoading(false);
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let text = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            text = (decoder.decode(value)).replace('```jsx', '').replace('```javascript', '').replace('javascript', '').replace('jsx', '').replace('```', '');
+            setCodeResp(text);
+        }
+
+        setIsReady(true);
+        UpdateCodeToDb(text, prompt);
+    };
 
     useEffect(() => {
         if (codeResp != '' && record?.uid && isReady && record?.code == null) {
-            UpdateCodeToDb(codeResp);
+            UpdateCodeToDb(codeResp, record?.description);
         }
     }, [codeResp && record && isReady])
 
 
-    const UpdateCodeToDb = async (code: any) => {
+    const UpdateCodeToDb = async (code: any, prompt: any) => {
         const result = await axios.put('/api/wireframe-to-code', {
             uid: record?.uid,
-            codeResp: { resp: code }
+            codeResp: { resp: code },
+            prompt: prompt
         });
     }
 
@@ -111,7 +144,7 @@ function ViewCode() {
                 <div>
                     {/* Selection Details  */}
                     <SelectionDetail record={record} regenrateCode={() => { GetRecordInfo(true) }}
-                        isReady={isReady}
+                        newGenerateCode={newGenerateCode} isReady={isReady}
                     />
                 </div>
                 <div className='col-span-4'>
